@@ -162,10 +162,10 @@ class AGURLSessionStubsTests: XCTestCase {
             XCTAssertNotNil(data, "response should contain data")
             
             // verify mocked JSON response
-            let response = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: nil) as [String: AnyObject]
-            XCTAssertTrue(response["firstname"] as String == "John")
-            XCTAssertTrue(response["lastname"] as String == "Smith")
-            XCTAssertTrue(response["age"] as Int == 25)
+            let response = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: nil) as! [String: AnyObject]
+            XCTAssertTrue(response["firstname"] as? String == "John")
+            XCTAssertTrue(response["lastname"] as? String == "Smith")
+            XCTAssertTrue(response["age"] as? Int == 25)
 
             registrationExpectation.fulfill()
         }
@@ -177,7 +177,7 @@ class AGURLSessionStubsTests: XCTestCase {
     
     func testStubWithLocalJsonFileInDocuments() {
         // extract 'Documents' directory path
-        let documentsPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as String
+        let documentsPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as! String
     
         // care for the case 'Documents' dir does not exist
         if (!NSFileManager.defaultManager().fileExistsAtPath(documentsPath)) {
@@ -207,10 +207,10 @@ class AGURLSessionStubsTests: XCTestCase {
             XCTAssertNotNil(data, "response should contain data")
             
             // verify mocked JSON response
-            let response = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: nil) as [String: AnyObject]
-            XCTAssertTrue(response["firstname"] as String == "John")
-            XCTAssertTrue(response["lastname"] as String == "Smith")
-            XCTAssertTrue(response["age"] as Int == 25)
+            let response = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: nil) as! [String: AnyObject]
+            XCTAssertTrue(response["firstname"] as? String == "John")
+            XCTAssertTrue(response["lastname"] as? String == "Smith")
+            XCTAssertTrue(response["age"] as? Int == 25)
             
             registrationExpectation.fulfill()
             

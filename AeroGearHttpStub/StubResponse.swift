@@ -45,7 +45,7 @@ public class StubResponse {
             case .Bundle(let bundle):
                 filePath = bundle.pathForResource(filename.stringByDeletingPathExtension, ofType: filename.pathExtension)
             case .Documents:
-                let documentsPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as String
+                let documentsPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as! String
                 filePath = documentsPath.stringByAppendingPathComponent(filename)
         }
                 

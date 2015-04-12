@@ -47,7 +47,7 @@ class StubURLProtocol: NSURLProtocol {
 
         let responseStub: StubResponse = self.stubDescr.responseBlock(request)
 
-        let urlResponse = NSHTTPURLResponse(URL: request.URL, statusCode: responseStub.statusCode, HTTPVersion: "HTTP/1.1", headerFields: responseStub.headers)!
+        let urlResponse = NSHTTPURLResponse(URL: request.URL!, statusCode: responseStub.statusCode, HTTPVersion: "HTTP/1.1", headerFields: responseStub.headers)!
         
         // TODO
         // cookies handling
