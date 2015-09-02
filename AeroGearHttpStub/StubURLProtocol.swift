@@ -27,7 +27,7 @@ class StubURLProtocol: NSURLProtocol {
     }
     
     override class func canInitWithTask(task: NSURLSessionTask) -> Bool {
-        return StubsManager.sharedManager.firstStubPassingTestForRequest(task.currentRequest) != nil
+        return StubsManager.sharedManager.firstStubPassingTestForRequest(task.currentRequest!) != nil
     }
 
     override init(request: NSURLRequest, cachedResponse: NSCachedURLResponse!, client: NSURLProtocolClient!) {

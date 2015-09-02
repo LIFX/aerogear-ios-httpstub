@@ -162,7 +162,7 @@ class AGURLSessionStubsTests: XCTestCase {
             XCTAssertNotNil(data, "response should contain data")
             
             // verify mocked JSON response
-            let response = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: nil) as! [String: AnyObject]
+            let response = (try! NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions(rawValue: 0))) as! [String: AnyObject]
             XCTAssertTrue(response["firstname"] as? String == "John")
             XCTAssertTrue(response["lastname"] as? String == "Smith")
             XCTAssertTrue(response["age"] as? Int == 25)
@@ -177,16 +177,22 @@ class AGURLSessionStubsTests: XCTestCase {
     
     func testStubWithLocalJsonFileInDocuments() {
         // extract 'Documents' directory path
-        let documentsPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as! String
+        let documentsPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] 
     
         // care for the case 'Documents' dir does not exist
         if (!NSFileManager.defaultManager().fileExistsAtPath(documentsPath)) {
-            NSFileManager.defaultManager().createDirectoryAtPath(documentsPath, withIntermediateDirectories: true, attributes: nil, error: nil)
+            do {
+                try NSFileManager.defaultManager().createDirectoryAtPath(documentsPath, withIntermediateDirectories: true, attributes: nil)
+            } catch _ {
+            }
         }
 
         // copy stubbed json file located in the test bundle  to 'Documents directory to perform our test
-        let filename = "stub.json"
-        NSFileManager.defaultManager().copyItemAtPath(NSBundle(forClass: AGURLSessionStubsTests.self).pathForResource(filename.stringByDeletingPathExtension, ofType: filename.pathExtension)!, toPath: documentsPath.stringByAppendingPathComponent(filename),  error: nil)
+        let filename = "stub.json" as NSString
+        do {
+            try NSFileManager.defaultManager().copyItemAtPath(NSBundle(forClass: AGURLSessionStubsTests.self).pathForResource(filename.stringByDeletingPathExtension, ofType: filename.pathExtension)!, toPath: (documentsPath as NSString).stringByAppendingPathComponent(filename as String))
+        } catch _ {
+        }
         
         StubsManager.stubRequestsPassingTest({ (request: NSURLRequest!) -> Bool in
             return true
@@ -207,15 +213,18 @@ class AGURLSessionStubsTests: XCTestCase {
             XCTAssertNotNil(data, "response should contain data")
             
             // verify mocked JSON response
-            let response = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: nil) as! [String: AnyObject]
+            let response = (try! NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions(rawValue: 0))) as! [String: AnyObject]
             XCTAssertTrue(response["firstname"] as? String == "John")
             XCTAssertTrue(response["lastname"] as? String == "Smith")
             XCTAssertTrue(response["age"] as? Int == 25)
             
             registrationExpectation.fulfill()
             
-            // delete file from 'Documents' directory
-            NSFileManager.defaultManager().removeItemAtPath(documentsPath.stringByAppendingPathComponent(filename), error:nil)
+            do {
+                // delete file from 'Documents' directory
+                try NSFileManager.defaultManager().removeItemAtPath((documentsPath as NSString).stringByAppendingPathComponent(filename as String))
+            } catch _ {
+            }
             
         }
         

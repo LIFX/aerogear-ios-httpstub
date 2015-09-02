@@ -38,18 +38,18 @@ public class StubResponse {
         self.dataSize = data.length
     }
     
-    convenience public init(filename: String, location: Location, statusCode: Int, headers: Dictionary<String, String>) {
+    convenience public init(filename: NSString, location: Location, statusCode: Int, headers: Dictionary<String, String>) {
         var filePath: String?
         
         switch location {
             case .Bundle(let bundle):
                 filePath = bundle.pathForResource(filename.stringByDeletingPathExtension, ofType: filename.pathExtension)
             case .Documents:
-                let documentsPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as! String
-                filePath = documentsPath.stringByAppendingPathComponent(filename)
+                let documentsPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as NSString
+                filePath = documentsPath.stringByAppendingPathComponent(filename as String)
         }
                 
-        let data = NSData(contentsOfFile:filePath!, options:NSDataReadingOptions.DataReadingMappedIfSafe, error: nil) ?? NSData()
+        let data = (try? NSData(contentsOfFile:filePath!, options:NSDataReadingOptions.DataReadingMappedIfSafe)) ?? NSData()
 
         self.init(data: data, statusCode: statusCode, headers: headers)
     }

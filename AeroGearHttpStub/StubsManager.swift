@@ -57,7 +57,7 @@ public class StubsManager {
     }
     
     public class func removeStub(stubDescr: StubDescriptor) {
-        if let index = find(StubsManager.sharedManager.stubDescriptors, stubDescr) {
+        if let index = StubsManager.sharedManager.stubDescriptors.indexOf(stubDescr) {
             StubsManager.sharedManager.stubDescriptors.removeAtIndex(index)
         }
     }
@@ -72,7 +72,7 @@ public class StubsManager {
     
     func firstStubPassingTestForRequest(request: NSURLRequest) -> StubDescriptor? {
         let count = stubDescriptors.count
-        for (index, _) in enumerate(stubDescriptors) {
+        for (index, _) in stubDescriptors.enumerate() {
             let reverseIndex = count - (index + 1)
             let stubDescr = stubDescriptors[reverseIndex]
             
@@ -106,8 +106,8 @@ private class Utils {
     
     private class func swizzleFromSelector(selector: String!, toSelector: String!, forClass:AnyClass!) {
         
-        var originalMethod = class_getClassMethod(forClass, Selector(stringLiteral: selector))
-        var swizzledMethod = class_getClassMethod(forClass, Selector(stringLiteral: toSelector))
+        let originalMethod = class_getClassMethod(forClass, Selector(stringLiteral: selector))
+        let swizzledMethod = class_getClassMethod(forClass, Selector(stringLiteral: toSelector))
         
         method_exchangeImplementations(originalMethod, swizzledMethod)
     }
@@ -119,7 +119,7 @@ extension NSURLSessionConfiguration {
         // as we've swap method, calling swizzled one here will call original one
         let config = swizzle_defaultSessionConfiguration()
         
-        var result = [AnyObject]()
+        var result = [AnyClass]()
         
         for proto in config.protocolClasses! {
             result.append(proto)
@@ -135,7 +135,7 @@ extension NSURLSessionConfiguration {
     class func swizzle_ephemeralSessionConfiguration() -> NSURLSessionConfiguration! {
         let config = swizzle_ephemeralSessionConfiguration()
         
-        var result = [AnyObject]()
+        var result = [AnyClass]()
         
         for proto in config.protocolClasses! {
             result.append(proto)
